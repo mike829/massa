@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Massa e densità – Allenamento</title>
+<style>
+:root{--bg:#f4f7ff;--card:#fff;--tx:#1d2540;--mut:#5d6785;--pri:#4f6bff;--ok:#1f9d61;--okbg:#e2f6ec;--ko:#d6455d;--kobg:#fde8ec;--bd:#d9e0f5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12162b;--card:#1c2240;--tx:#eef1ff;--mut:#a3acd0;--pri:#7d92ff;--ok:#4fd08e;--okbg:#14382a;--ko:#ff7b90;--kobg:#401d27;--bd:#323a66}}
+:root[data-theme="dark"]{--bg:#12162b;--card:#1c2240;--tx:#eef1ff;--mut:#a3acd0;--pri:#7d92ff;--ok:#4fd08e;--okbg:#14382a;--ko:#ff7b90;--kobg:#401d27;--bd:#323a66}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:26px;margin:8px 0}h2{font-size:20px;margin:0 0 8px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px;margin:14px 0}
+button{font:inherit;cursor:pointer;border-radius:14px;border:2px solid var(--bd);background:var(--card);color:var(--tx);padding:12px 14px;width:100%;text-align:left;margin:6px 0}
+button.pri{background:var(--pri);border-color:var(--pri);color:#fff;text-align:center;font-weight:700}
+button:disabled{cursor:default}
+.ok{background:var(--okbg)!important;border-color:var(--ok)!important}
+.ko{background:var(--kobg)!important;border-color:var(--ko)!important}
+input{font:inherit;width:100%;padding:12px;border-radius:14px;border:2px solid var(--bd);background:var(--bg);color:var(--tx)}
+.bar{height:10px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri);transition:width .3s}
+.mut{color:var(--mut);font-size:15px}
+.exp{margin-top:12px;padding:12px;border-radius:14px;background:var(--bg);border-left:5px solid var(--pri)}
+.tag{display:inline-block;font-size:13px;background:var(--bd);border-radius:20px;padding:2px 10px;margin-bottom:6px}
+.big{font-size:44px;text-align:center}
+.row{display:flex;gap:8px}.row button{text-align:center}
+</style></head><body><main id="app"></main>
+<script>
+const Q=[
+{t:"mc",q:"La densità è una caratteristica delle sostanze. Vero o falso?",o:["Vero","Falso"],a:0,e:"Vero! Ogni sostanza (ferro, rame, acqua…) ha la sua densità, come una “carta d’identità”."},
+{t:"mc",q:"1 dm³ di rame ha la stessa massa di 1 dm³ di ferro. Vero o falso?",o:["Vero","Falso"],a:1,e:"Falso. Stesso volume, ma sostanze diverse hanno densità diverse, quindi masse diverse."},
+{t:"mc",q:"Il ferro ha densità maggiore dell’acqua. Vero o falso?",o:["Vero","Falso"],a:0,e:"Vero. Il ferro ha d ≈ 7,8 mentre l’acqua ha d = 1: il ferro è molto più “pesante” a parità di volume."},
+{t:"mc",q:"1 kg di piombo ha lo stesso volume di 1 kg di ghiaccio. Vero o falso?",o:["Vero","Falso"],a:1,e:"Falso. Il piombo è molto più denso, quindi 1 kg di piombo occupa meno spazio di 1 kg di ghiaccio. Stessa massa ≠ stesso volume!"},
+{t:"mc",q:"La densità è uguale a:",o:["massa per volume","volume diviso massa","massa diviso volume","massa diviso superficie"],a:2,e:"d = m : V. Massa diviso volume."},
+{t:"mc",q:"Qual è la massa di 2 dm³ di acqua distillata (d = 1)?",o:["0,5 kg","2 kg","20 g","2 hg"],a:1,e:"L’acqua ha d = 1 kg/dm³, quindi 1 dm³ = 1 kg. Allora 2 dm³ = 2 kg."},
+{t:"mc",q:"Due sostanze hanno lo stesso volume e il rapporto tra le densità è 3/4. Qual è il rapporto tra le due masse?",o:["4/3","3/4","8/9","non si può sapere"],a:1,e:"m = d × V. Se V è uguale, le masse stanno tra loro come le densità: 3/4."},
+{t:"num",q:"37 m³ di acqua distillata hanno una massa di … kg",u:"kg",a:37000,e:"1 m³ = 1000 dm³, quindi 37 m³ = 37 000 dm³. Ogni dm³ di acqua pesa 1 kg → 37 000 kg."},
+{t:"num",q:"940 dm³ di acqua distillata hanno una massa di … hg",u:"hg",a:9400,e:"940 dm³ = 940 kg. Da kg a hg si moltiplica per 10 (1 kg = 10 hg): 940 × 10 = 9 400 hg."},
+{t:"num",q:"30 m³ di acqua distillata hanno una massa di … g",u:"g",a:30000000,e:"30 m³ = 30 000 dm³ = 30 000 kg. Da kg a g si moltiplica per 1000: 30 000 × 1000 = 30 000 000 g."},
+{t:"num",q:"64 dm³ di acqua distillata hanno una massa di … dag",u:"dag",a:6400,e:"64 dm³ = 64 kg. Da kg a dag si moltiplica per 100 (1 kg = 100 dag): 64 × 100 = 6 400 dag."},
+{t:"num",q:"Calcola il volume di un oggetto di marmo (d = 2,6) con massa 130 g.",u:"cm³",a:50,e:"V = m : d = 130 : 2,6 = 50 cm³. (Con le masse in g, i volumi vengono in cm³.)"},
+{t:"num",q:"Una trave di acciaio ha massa 785 kg e volume 100 000 cm³. Qual è la sua densità?",u:"",a:7.85,e:"Prima converti: 100 000 cm³ = 100 dm³. Poi d = m : V = 785 : 100 = 7,85 kg/dm³."},
+{t:"num",q:"Calcola la massa di un asse di legno (d = 0,5) con volume 0,05 m³.",u:"kg",a:25,e:"0,05 m³ = 50 dm³. m = d × V = 0,5 × 50 = 25 kg."},
+{t:"num",q:"Bilance (come es. 204): scoiattolo + 2 cocorite = 110 g; 2 scoiattoli + 1 cocorita = 130 g. Quanto pesa 1 cocorita?",u:"g",a:30,e:"Somma le due bilance: 3 scoiattoli + 3 cocorite = 240 g, quindi 1 scoiattolo + 1 cocorita = 80 g. Confronta con la prima (scoiattolo + 2 cocorite = 110): la differenza è 1 cocorita = 110 − 80 = 30 g."},
+{t:"num",q:"Bilance (tipo es. 202): 1 pera = 5 ciliegie; 2 albicocche = 1 pera + 1 ciliegia. Quante ciliegie servono per pareggiare 1 albicocca?",u:"ciliegie",a:3,e:"2 albicocche = 5 + 1 = 6 ciliegie. Quindi 1 albicocca = 6 : 2 = 3 ciliegie."},
+{t:"num",q:"Esercizio extra: un blocco di ferro ha d = 7,8 kg/dm³ e volume 3 dm³. Quanto pesa?",u:"kg",a:23.4,e:"m = d × V = 7,8 × 3 = 23,4 kg."},
+{t:"num",q:"Esercizio extra: 5 dm³ di una sostanza hanno massa 4 kg. Qual è la densità?",u:"kg/dm³",a:0.8,e:"d = m : V = 4 : 5 = 0,8 kg/dm³."},
+{t:"num",q:"52 m³ di acqua distillata hanno una massa di … kg",u:"kg",a:52000,e:"52 m³ = 52 000 dm³, e 1 dm³ di acqua pesa 1 kg → 52 000 kg."},
+{t:"num",q:"8 dm³ di acqua distillata hanno una massa di … g",u:"g",a:8000,e:"8 dm³ = 8 kg. Da kg a g si moltiplica per 1000 → 8 000 g."},
+{t:"num",q:"250 dm³ di acqua distillata hanno una massa di … hg",u:"hg",a:2500,e:"250 dm³ = 250 kg. 1 kg = 10 hg → 250 × 10 = 2 500 hg."},
+{t:"num",q:"0,5 m³ di acqua distillata hanno una massa di … kg",u:"kg",a:500,e:"0,5 m³ = 500 dm³ (0,5 × 1000). Quindi 500 kg."},
+{t:"num",q:"15 dm³ di acqua distillata hanno una massa di … dag",u:"dag",a:1500,e:"15 dm³ = 15 kg. 1 kg = 100 dag → 1 500 dag."},
+{t:"num",q:"4 000 kg di acqua distillata occupano un volume di … m³",u:"m³",a:4,e:"4 000 kg = 4 000 dm³. Per passare da dm³ a m³ si divide per 1000 → 4 m³."},
+{t:"num",q:"7 kg di acqua distillata occupano un volume di … dm³",u:"dm³",a:7,e:"Per l’acqua 1 kg corrisponde a 1 dm³, quindi 7 kg → 7 dm³."},
+{t:"num",q:"600 g di acqua distillata occupano un volume di … cm³",u:"cm³",a:600,e:"Per l’acqua d = 1 g/cm³, quindi 600 g → 600 cm³."},
+{t:"num",q:"2,5 ℓ di acqua distillata hanno una massa di … g",u:"g",a:2500,e:"1 ℓ = 1 dm³ = 1 kg. Quindi 2,5 ℓ = 2,5 kg = 2 500 g."},
+{t:"num",q:"Calcola la massa di un blocco di alluminio (d = 2,7 kg/dm³) di volume 10 dm³.",u:"kg",a:27,e:"m = d × V = 2,7 × 10 = 27 kg."},
+{t:"num",q:"Calcola la massa di una pepita d’oro (d = 19,3 g/cm³) di volume 2 cm³.",u:"g",a:38.6,e:"m = d × V = 19,3 × 2 = 38,6 g."},
+{t:"num",q:"Calcola la massa di 5 dm³ di mercurio (d = 13,6 kg/dm³).",u:"kg",a:68,e:"m = d × V = 13,6 × 5 = 68 kg."},
+{t:"num",q:"Calcola la massa di 20 ℓ di olio (d = 0,9 kg/dm³).",u:"kg",a:18,e:"20 ℓ = 20 dm³. m = d × V = 0,9 × 20 = 18 kg."},
+{t:"num",q:"Un pezzo di rame ha massa 89 g e volume 10 cm³. Qual è la sua densità?",u:"g/cm³",a:8.9,e:"d = m : V = 89 : 10 = 8,9 g/cm³."},
+{t:"num",q:"Un cubetto di ghiaccio ha massa 45 g e volume 50 cm³. Qual è la sua densità?",u:"g/cm³",a:0.9,e:"d = m : V = 45 : 50 = 0,9 g/cm³. È minore di 1, per questo il ghiaccio galleggia!"},
+{t:"num",q:"Un cubo di lato 10 cm ha massa 2,7 kg. Qual è la sua densità?",u:"kg/dm³",a:2.7,e:"Volume: 10 × 10 × 10 = 1 000 cm³ = 1 dm³. d = 2,7 : 1 = 2,7 kg/dm³."},
+{t:"num",q:"Un blocco di 0,02 m³ ha massa 54 kg. Qual è la sua densità?",u:"kg/dm³",a:2.7,e:"0,02 m³ = 20 dm³. d = 54 : 20 = 2,7 kg/dm³."},
+{t:"num",q:"Calcola il volume di 113 g di piombo (d = 11,3 g/cm³).",u:"cm³",a:10,e:"V = m : d = 113 : 11,3 = 10 cm³."},
+{t:"num",q:"Calcola il volume di una barra di ferro (d = 7,8 kg/dm³) di massa 39 kg.",u:"dm³",a:5,e:"V = m : d = 39 : 7,8 = 5 dm³."},
+{t:"num",q:"Calcola il volume di una tavola di legno (d = 0,6 kg/dm³) di massa 30 kg.",u:"dm³",a:50,e:"V = m : d = 30 : 0,6 = 50 dm³."},
+{t:"num",q:"Un parallelepipedo di acciaio (d = 8 g/cm³) misura 5 cm × 4 cm × 10 cm. Qual è la sua massa?",u:"g",a:1600,e:"Volume: 5 × 4 × 10 = 200 cm³. m = d × V = 8 × 200 = 1 600 g."},
+{t:"mc",q:"A parità di volume, quale ha la massa maggiore?",o:["Legno (d = 0,6)","Alluminio (d = 2,7)","Ferro (d = 7,8)","Acqua (d = 1)"],a:2,e:"m = d × V: se V è uguale, ha più massa chi ha la densità più grande, cioè il ferro (7,8)."},
+{t:"mc",q:"Quale di queste sostanze galleggia sull’acqua (d = 1)?",o:["Ferro (d = 7,8)","Piombo (d = 11,3)","Olio (d = 0,9)","Marmo (d = 2,6)"],a:2,e:"Galleggia ciò che ha densità minore di quella dell’acqua: solo l’olio (0,9 < 1)."},
+{t:"mc",q:"Due oggetti hanno lo stesso volume. Quello con densità maggiore ha massa maggiore. Vero o falso?",o:["Vero","Falso"],a:0,e:"Vero: m = d × V, con V uguale la massa dipende solo dalla densità."},
+{t:"mc",q:"Se taglio a metà un blocco di ferro, la sua densità cambia. Vero o falso?",o:["Vero","Falso"],a:1,e:"Falso. Massa e volume si dimezzano, ma il rapporto m : V resta uguale. La densità è una caratteristica della sostanza."},
+{t:"mc",q:"1 ℓ di acqua distillata ha massa 1 kg. Vero o falso?",o:["Vero","Falso"],a:0,e:"Vero: 1 ℓ = 1 dm³ e 1 dm³ di acqua distillata ha massa 1 kg."},
+{t:"mc",q:"1 m³ = 100 dm³. Vero o falso?",o:["Vero","Falso"],a:1,e:"Falso: 1 m³ = 1 000 dm³ (per i volumi si moltiplica per 1000 a ogni passo)."},
+{t:"mc",q:"Quale formula permette di calcolare la massa?",o:["m = d : V","m = V : d","m = d × V","m = d + V"],a:2,e:"Da d = m : V si ricava m = d × V."},
+{t:"mc",q:"Due sostanze hanno la stessa massa. Il rapporto tra le densità è 2/3. Qual è il rapporto tra i volumi?",o:["2/3","3/2","1","non si può sapere"],a:1,e:"V = m : d. A parità di massa, i volumi stanno al contrario delle densità: se d₁/d₂ = 2/3, allora V₁/V₂ = 3/2."},
+{t:"mc",q:"Due sostanze hanno lo stesso volume. Il rapporto tra le densità è 5/2. Qual è il rapporto tra le masse?",o:["2/5","5/2","7/2","non si può sapere"],a:1,e:"Stesso volume → le masse stanno come le densità: 5/2."},
+{t:"num",q:"Bilance (tipo es. 203): 1 pera = 4 prugne; 1 pesca = 1 pera + 2 prugne. Quante prugne servono per pareggiare 1 pesca?",u:"prugne",a:6,e:"1 pesca = 4 + 2 = 6 prugne."},
+{t:"num",q:"Bilance: 1 arancia = 4 kiwi; 2 banane = 3 arance. Quanti kiwi servono per pareggiare 1 banana?",u:"kiwi",a:6,e:"3 arance = 3 × 4 = 12 kiwi. 2 banane = 12 kiwi, quindi 1 banana = 6 kiwi."},
+{t:"num",q:"Bilance: 3 mele = 2 pere; 1 pera = 6 ciliegie. Quante ciliegie pareggiano 1 mela?",u:"ciliegie",a:4,e:"2 pere = 12 ciliegie, quindi 3 mele = 12 ciliegie e 1 mela = 12 : 3 = 4 ciliegie."},
+{t:"num",q:"Bilance (tipo es. 204): 1 libro + 2 quaderni = 700 g; 2 libri + 1 quaderno = 800 g. Quanto pesa 1 quaderno?",u:"g",a:200,e:"Somma: 3 libri + 3 quaderni = 1 500 g → 1 libro + 1 quaderno = 500 g. Confronta con la prima bilancia: il quaderno in più pesa 700 − 500 = 200 g."},
+{t:"num",q:"Bilance: 2 tazze + 1 piatto = 700 g; 1 tazza + 1 piatto = 500 g. Quanto pesa 1 piatto?",u:"g",a:300,e:"Differenza tra le due bilance: 1 tazza = 700 − 500 = 200 g. Allora 1 piatto = 500 − 200 = 300 g."}
+];
+let order,i,score,wrong,done;
+const app=document.getElementById("app");
+const fmt=n=>n.toLocaleString("it-IT");
+function home(){app.innerHTML=`<h1>🧪 Massa e densità</h1><p class="mut">Allenamento per la verifica: quiz con spiegazione passo passo.</p>
+<div class="card"><h2>📘 Ripasso veloce</h2>
+<p><b>Densità</b>: <b>d = m : V</b><br>Da qui: <b>m = d × V</b> e <b>V = m : d</b></p>
+<p><b>Acqua distillata</b>: d = 1 → 1 dm³ = 1 L = 1 kg = 1000 g</p>
+<p><b>Volumi</b>: 1 m³ = 1000 dm³ · 1 dm³ = 1000 cm³</p>
+<p><b>Masse</b>: kg → hg → dag → g: ogni passo verso destra ×10</p>
+<p><b>Trucco</b>: stessa massa → più densità = meno volume. Stesso volume → più densità = più massa.</p></div>
+<button class="pri" onclick="start10()">⚡ Quiz veloce (10 domande)</button><button class="pri" onclick="start()">▶ Quiz completo (${Q.length} domande)</button>`}
+function start10(){start(Q.map((_,k)=>k).sort(()=>Math.random()-.5).slice(0,10))}
+function start(list){order=(list||Q.map((_,k)=>k)).slice().sort(()=>Math.random()-.5);i=0;score=0;wrong=[];show()}
+function show(){
+ if(i>=order.length)return end();
+ const q=Q[order[i]];
+ let h=`<div class="bar"><i style="width:${i/order.length*100}%"></i></div><p class="mut">Domanda ${i+1} di ${order.length} · Punti: ${score}</p><div class="card"><span class="tag">${q.t=="mc"?"Scegli":"Calcola"}</span><h2>${q.q}</h2>`;
+ if(q.t=="mc")h+=q.o.map((o,k)=>`<button onclick="pick(${k})">${o}</button>`).join("");
+ else h+=`<input id="in" inputmode="decimal" placeholder="Scrivi il risultato${q.u?" in "+q.u:""}" autocomplete="off"><button class="pri" onclick="chk()">Controlla</button>`;
+ app.innerHTML=h+`<div id="fb"></div></div>`;
+ const el=document.getElementById("in");if(el)el.addEventListener("keydown",e=>{if(e.key=="Enter")chk()})}
+function fb(ok,q,extra){
+ if(ok)score++;else wrong.push(order[i]);
+ document.getElementById("fb").innerHTML=`<div class="exp ${ok?"ok":"ko"}"><b>${ok?"✅ Bravissima!":"❌ Quasi!"}</b> ${extra||""}<br>${q.e}</div><button class="pri" onclick="i++;show()">Avanti →</button>`}
+function pick(k){const q=Q[order[i]];document.querySelectorAll(".card > button").forEach((b,j)=>{b.disabled=true;if(j==q.a)b.classList.add("ok");else if(j==k)b.classList.add("ko")});fb(k==q.a,q,k==q.a?"":"La risposta giusta è: <b>"+q.o[q.a]+"</b>.")}
+function chk(){
+ const el=document.getElementById("in"),q=Q[order[i]];
+ const v=parseFloat(el.value.replace(/\s/g,"").replace(",","."));
+ if(isNaN(v)){el.focus();return}
+ el.disabled=true;document.querySelector(".card .pri").disabled=true;
+ const ok=Math.abs(v-q.a)<1e-6*Math.max(1,q.a);
+ fb(ok,q,ok?"":"Risposta: <b>"+fmt(q.a)+" "+q.u+"</b>.")}
+function end(){
+ const p=Math.round(score/order.length*100);
+ app.innerHTML=`<div class="card"><div class="big">${p>=80?"🏆":p>=50?"👍":"💪"}</div><h2 style="text-align:center">${score} su ${order.length} (${p}%)</h2><p class="mut" style="text-align:center">${p>=80?"Sei prontissima!":"Ripassa gli errori e riprova: si migliora in fretta!"}</p></div>`+
+ (wrong.length?`<button class="pri" onclick="start(wrong)">🔁 Rifai solo gli errori (${wrong.length})</button>`:"")+
+ `<button class="pri" onclick="start()">🔄 Nuovo quiz completo</button><button onclick="home()" style="text-align:center">🏠 Torna al ripasso</button>`}
+home();
+</script></body></html>
